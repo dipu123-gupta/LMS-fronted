@@ -1,10 +1,13 @@
+import { Route, Router } from 'react-router-dom'
 import './App.css'
 
 function App() {
 
   return (
   <>
-  <h1>LMS project</h1>
+  <Router>
+    {/* <Route path='/' element={<Home/>} ></Route> */}
+  </Router>
   </>
   )
 }
