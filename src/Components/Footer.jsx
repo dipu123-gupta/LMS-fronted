@@ -2,7 +2,7 @@ import React from "react";
 
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter } from "react-icons/bs";
 
-export const Footer = () => {
+ const Footer = () => {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   return (
@@ -27,3 +27,5 @@ export const Footer = () => {
     </>
   );
 };
+
+export default Footer;
