@@ -14,7 +14,7 @@ const AboutUs = () => {
       description:
         "Education is the most powerful tool you can use to change the world",
       image: apj,
-      slideNumber: 1, 
+      slideNumber: 1,
     },
     {
       title: "Nelson Mandela",
@@ -67,7 +67,7 @@ const AboutUs = () => {
               alt="about main image"
               className="drop-shadow-2xl"
               style={{
-                filter: "drop-shadow(0px 10px 10px rgb(0 0 0))", // ✅ fixed
+                filter: "drop-shadow(0px 10px 10px rgb(0 0 0))",
               }}
             />
           </div>
