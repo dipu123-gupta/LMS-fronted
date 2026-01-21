@@ -4,16 +4,17 @@ import { AiFillCloseCircle } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../Components/Footer.jsx";
 import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./../Redux/Slices/AuthSlice.js";
 
 const HomeLayout = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // for checking if user is logged in
-  const isLoggedIn = useSelector((state) => state?.usth?.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state?.auth?.isLoginedIn);
 
   // for Displaying the option is acc to role
-  const role = useSelector((state) => state?.usth?.role);
+  const role = useSelector((state) => state?.auth?.role);
 
   const changeWith = () => {
     const drawerSide = document.getElementsByClassName("drawer-side");
@@ -26,18 +27,16 @@ const HomeLayout = ({ children }) => {
 
     const drawerSide = document.getElementsByClassName("drawer-side");
     drawerSide[0].style.width = "0";
-
-    // changeWith();
-
-    async function handleLogot(e) {
-      e.preventDefault();
-
-      // const res=await dispatch(logout())
-      // if (res?.payload?.success) {
-      //   navigate('/')
-      // }
+  };
+  // logout handler
+  const handleLogot = async (e) => {
+    e.preventDefault();
+    const res = await dispatch(logout());
+    if (res?.payload?.success) {
+      navigate("/");
     }
   };
+
   return (
     <div className="min-h-[90vh]">
       <div className="drawer absolute left-0 z-50 w-fit">
@@ -82,41 +81,41 @@ const HomeLayout = ({ children }) => {
 
             {!isLoggedIn && (
               <li className="absolute bottom-2 w-[90%]">
-              <div className="w-full flex items-center justify-center gap-4">
-                <Link
-                  to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
-                >
-                  Login
-                </Link>
+                <div className="w-full flex items-center justify-center gap-4">
+                  <Link
+                    to="/login"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
+                  >
+                    Login
+                  </Link>
 
-                <Link
-                  to="/signup"
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
-                >
-                  SignUp
-                </Link>
-              </div>
+                  <Link
+                    to="/signup"
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
+                  >
+                    SignUp
+                  </Link>
+                </div>
               </li>
             )}
 
             {isLoggedIn && (
               <li className="absolute bottom-4 w-[90%]">
-              <div className="w-full flex items-center justify-center gap-4">
-                <Link
-                  to="/user/profile"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
-                >
-                  Profile
-                </Link>
+                <div className="w-full flex items-center justify-center gap-4">
+                  <Link
+                    to="/user/profile"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
+                  >
+                    Profile
+                  </Link>
 
-                <Link
-                  onClick={handleLogot}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
-                >
-                  LogOut
-                </Link>
-              </div>
+                  <button
+                    onClick={handleLogot}
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 font-semibold rounded-md w-full text-center"
+                  >
+                    LogOut
+                  </button>
+                </div>
               </li>
             )}
           </ul>
