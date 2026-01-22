@@ -10,54 +10,58 @@ const CourseDescription = () => {
   const { role, data } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log(location);
-  }, []);
+  console.log(state);
+}, [state]);
+
   return (
     <HomeLayout>
-      <div className="min-h-[90vh] pt-12 px-20 flex flex-col items-center justify-center text-white">
-        <div className="grid grid-cols-2 gap-10 py-10 relative">
-          <div className="space-y-5">
+      <div className="min-h-[90vh] pt-12 px-20 flex items-center justify-center text-white">
+        <div className="grid grid-cols-2 gap-12 py-12 px-12 rounded-2xl bg-gradient-to-br from-[#1A2238] to-[#0F172A] shadow-2xl border border-gray-700">
+          {/* LEFT CARD */}
+          <div className="space-y-6 bg-[#111827] p-6 rounded-xl shadow-lg border border-gray-700">
             <img
               src={state?.thumbnail?.secure_url}
               alt="thumbnail"
-              className="w-2xs"
+              className="w-full h-64 object-cover object-center rounded-xl border border-gray-600 transition-transform duration-300 hover:scale-105"
             />
-            <div className="space-y-4  ">
-              <div className="flex flex-col items-center justify-center text-xl">
+
+            <div className="space-y-4">
+              <div className="flex flex-col items-center justify-center text-lg gap-2">
                 <p className="font-semibold">
-                  <span className="text-yellow-500 font-semibold">
-                    Total lactures:
-                  </span>
+                  <span className="text-yellow-400">Total lectures:</span>{" "}
                   {state?.numberOfLectures}
                 </p>
 
                 <p className="font-semibold">
-                  <span className="text-yellow-500 font-semibold">
-                    Instructor:
-                  </span>
+                  <span className="text-yellow-400">Instructor:</span>{" "}
                   {state?.createdBy}
                 </p>
               </div>
 
               {role === "admin" || data?.subscription?.status === "ACTIVE" ? (
-                <button className="bg-yellow-500 text-xl rounded-md font-bold px-5 py-3 w-full hover:bg-yellow-400 transition-all ease-in-out duration-300">
+                <button className="bg-yellow-500 text-lg rounded-lg font-bold px-5 py-3 w-full hover:bg-yellow-400 transition-all duration-300 shadow-md">
                   Watch lectures
                 </button>
               ) : (
-                <button className="bg-yellow-500 text-xl rounded-md font-bold px-5 py-3 w-full hover:bg-yellow-400 transition-all ease-in-out duration-300">
-                  Subscribe naw
+                <button className="bg-yellow-500 text-lg rounded-lg font-bold px-5 py-3 w-full hover:bg-yellow-300 transition-all duration-300 shadow-md">
+                  Subscribe now
                 </button>
               )}
             </div>
           </div>
 
-          <div className="space-y-2 text-xl">
-            <h1 className="text-3xl font-bold text-yellow-500 mb-5 text-center">
+          {/* RIGHT CARD */}
+          <div className="space-y-4 bg-[#111827] p-8 rounded-xl shadow-lg border border-gray-700">
+            <h1 className="text-4xl font-extrabold text-yellow-400 mb-4 text-center">
               {state?.title}
             </h1>
 
-            <p className="text-yellow-500">Course Descripton:</p>
-            <p>{state?.description}</p>
+            <p className="text-yellow-400 font-semibold text-lg">
+              Course Description
+            </p>
+            <p className="text-gray-300 leading-relaxed">
+              {state?.description}
+            </p>
           </div>
         </div>
       </div>

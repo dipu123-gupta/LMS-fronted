@@ -7,39 +7,46 @@ const CourseCard = ({ data }) => {
   return (
     <div
       onClick={() => navigate(`/course/description/`, { state: { ...data } })}
-      className="text-white w-[22rem] h-[430px] rounded-lg cursor-pointer group overflow-hidden bg-zinc-700 hover:shadow-lg transition-all"
+      className=" text-white w-[22rem] h-[450px] cursor-pointer rounded-2xl overflow-hidden group bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:shadow-yellow-500/20 hover:-translate-y-2 transition-all duration-300"
     >
-      <div className="overflow-hidden">
+      {/* IMAGE */}
+      <div className="relative overflow-hidden">
         <img
           src={data?.thumbnail?.secure_url}
           alt={data?.title}
-          className="h-48 w-full object-cover rounded-t-lg group-hover:scale-110 transition-transform duration-300"
+          className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       </div>
 
-      <div className="p-3 space-y-1">
-        <h2 className="text-xl font-bold text-yellow-500 line-clamp-2">
+      {/* CONTENT */}
+      <div className="p-5 space-y-3">
+        <h2 className="text-xl font-bold text-yellow-400 line-clamp-2">
           {data?.title}
         </h2>
 
-        <p className="line-clamp-2 text-sm text-gray-200">
+        <p className="text-sm text-gray-300 line-clamp-2">
           {data?.description}
         </p>
 
-        <p className="font-semibold text-sm">
-          <span className="text-yellow-500 font-bold">Category: </span>
-          {data?.category}
-        </p>
+        <div className="pt-2 space-y-1 text-sm">
+          <p>
+            <span className="text-yellow-400 font-semibold">Category:</span>{" "}
+            {data?.category}
+          </p>
 
-        <p className="font-semibold text-sm">
-          <span className="text-yellow-500 font-bold">Total Lectures: </span>
-          {data?.numberOfLectures}
-        </p>
+          <p>
+            <span className="text-yellow-400 font-semibold">
+              Total Lectures:
+            </span>{" "}
+            {data?.numberOfLectures}
+          </p>
 
-        <p className="font-semibold text-sm">
-          <span className="text-yellow-500 font-bold">Instructor: </span>
-          {data?.createdBy}
-        </p>
+          <p>
+            <span className="text-yellow-400 font-semibold">Instructor:</span>{" "}
+            {data?.createdBy}
+          </p>
+        </div>
       </div>
     </div>
   );
