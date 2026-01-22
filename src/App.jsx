@@ -5,6 +5,7 @@ import AboutUs from "./Pages/AboutUs.jsx";
 import NotFound from "./Pages/NotFound.jsx";
 import Signup from "./Pages/Signup.jsx";
 import Login from "./Pages/Login.jsx";
+import Courses from "./Pages/course/Courses.jsx";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/courses" element={<Courses />} />
+
       </Routes>
     </>
   );
