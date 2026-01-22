@@ -7,10 +7,7 @@ import CourseCard from "../../Components/CourseCard.jsx";
 const Courses = () => {
   const dispatch = useDispatch();
 
-  // ✅ FIXED HERE (course ❌ → Courses ✅)
-  const courseData = useSelector(
-    (state) => state.Courses.courseData
-  );
+  const courseData = useSelector((state) => state.Courses.courseData);
 
   useEffect(() => {
     dispatch(getAllCourses());
@@ -19,12 +16,9 @@ const Courses = () => {
   return (
     <HomeLayout>
       <div className="min-h-[90vh] pt-12 pl-20 flex flex-col gap-10 text-white">
-
         <h1 className="text-3xl font-semibold text-center">
           Explore the courses made by{" "}
-          <span className="font-bold text-yellow-500">
-            Industry experts
-          </span>
+          <span className="font-bold text-yellow-500">Industry experts</span>
         </h1>
 
         <div className="mb-10 flex flex-wrap gap-14">
@@ -36,7 +30,6 @@ const Courses = () => {
             <p>No courses available</p>
           )}
         </div>
-
       </div>
     </HomeLayout>
   );

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { createAccount } from "../Redux/Slices/AuthSlice.js";
+import { isEmail, isPassword } from "../Helpers/regexMatcher.js";
 // import validator from "validator";
 
 const Signup = () => {
@@ -53,11 +54,6 @@ const Signup = () => {
   const createNewAccount = async (event) => {
     event.preventDefault();
 
-    // regex yahin define
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
     if (
       !signupData.email ||
       !signupData.password ||
@@ -80,13 +76,13 @@ const Signup = () => {
     }
 
     //! ✅ EMAIL VALIDATION
-    if (!emailRegex.test(signupData.email)) {
+    if (!isEmail(signupData.email)) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     //! ✅ PASSWORD VALIDATION
-    if (!passwordRegex.test(signupData.password)) {
+    if (!isPassword(signupData.password)) {
       toast.error(
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
       );
