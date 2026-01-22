@@ -10,7 +10,7 @@ const NotFound = () => {
         404
       </h1>
 
-      <div className="bg-black text-white px-2 text-sm rounded rotate-12 absolute">
+      <div className="bg-black -translate-y-5 text-white px-2 text-sm rounded rotate-12 absolute">
         page not found...
       </div>
 
