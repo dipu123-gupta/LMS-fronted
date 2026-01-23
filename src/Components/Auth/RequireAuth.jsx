@@ -13,14 +13,6 @@ const RequireAuth = ({ allowedRole }) => {
   }
 
   return <Outlet />;
-
-  // return isLoggedIn && allowedRole.include((myRole) => myRole === role) ? (
-  //   <Outlet />
-  // ) : isLoggedIn ? (
-  //   <Navigate to="/denied" />
-  // ) : (
-  //   <Navigate to="/login" />
-  // );
 };
 
 export default RequireAuth;

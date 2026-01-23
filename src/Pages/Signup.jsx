@@ -44,7 +44,6 @@ const Signup = () => {
       fileReader.readAsDataURL(uploadedImage);
 
       fileReader.addEventListener("load", () => {
-        // `this.result` ki jagah `fileReader.result` use karo
         console.log(fileReader.result);
         setPreviewImage(fileReader.result);
       });
@@ -87,7 +86,7 @@ const Signup = () => {
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
       );
       return;
-    }
+    };
 
     const formData = new FormData();
     formData.append("name", signupData.name);
