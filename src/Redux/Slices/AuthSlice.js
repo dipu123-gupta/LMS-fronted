@@ -5,7 +5,10 @@ import toast from "react-hot-toast";
 const initialState = {
   isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
   role: localStorage.getItem("role") || "",
-  data:JSON.parse(localStorage.getItem("data")) || {},
+  data: localStorage.getItem("data")
+  ? JSON.parse(localStorage.getItem("data"))
+  : {},
+  // data: JSON.parse(localStorage.getItem("data")) || {},
   // ? JSON.parse(localStorage.getItem("data"))
   // : {},
 };
@@ -55,6 +58,29 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
   }
 });
 
+export const updateProfile = createAsyncThunk(
+  "/user/update/profile",
+  async ({ id, formData }) => {
+    const res = axiosInstance.put(`/user/update`, formData);
+    toast.promise(res, {
+      loading: "Updating profile...",
+      success: (data) => data?.data?.message,
+      error: "Failed to update profile",
+    });
+    return (await res).data;
+  }
+);
+
+
+export const getUserData = createAsyncThunk("/user/details", async () => {
+  try {
+    const res = axiosInstance.get('/user/profile');
+    return (await res).data;
+  } catch (error) {
+    toast.error(error?.message);
+  }
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -63,11 +89,9 @@ const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         const user = action.payload.user;
-
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
-
         state.isLoggedIn = true;
         state.data = user;
         state.role = user.role;
@@ -77,7 +101,16 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.role = "";
         state.data = {};
-      });
+      })
+      .addCase(getUserData.fulfilled,(state,action)=>{
+        const user = action.payload.user;
+        localStorage.setItem("data", JSON.stringify(user));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", user.role);
+        state.isLoggedIn = true;
+        state.data = user;
+        state.role = user.role;
+      })
   },
 });
 

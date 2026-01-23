@@ -1,4 +1,4 @@
-import HomeLayout from "../Layouts/HomeLayout.jsx";
+import HomeLayout from "../../Layouts/HomeLayout.jsx";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -62,7 +62,7 @@ const Profile = () => {
           </div>
 
           {/* Cancel Subscription */}
-          {userData?.subscription?.status !== "active" && (
+          {userData?.subscription?.status === "active" && (
             <button
               className="w-full bg-red-600 hover:bg-red-500 transition-all duration-300 rounded-md py-2 font-semibold shadow-md"
             >

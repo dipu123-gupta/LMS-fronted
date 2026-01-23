@@ -38,7 +38,7 @@ const CourseDescription = () => {
                 </p>
               </div>
 
-              {role === "admin" || data?.subscription?.status === "ACTIVE" ? (
+              {role === "admin" || data?.subscription?.status === "active" ? (
                 <button className="bg-yellow-500 text-lg rounded-lg font-bold px-5 py-3 w-full hover:bg-yellow-400 transition-all duration-300 shadow-md">
                   Watch lectures
                 </button>
