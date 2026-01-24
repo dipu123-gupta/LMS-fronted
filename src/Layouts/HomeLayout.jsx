@@ -62,7 +62,7 @@ const HomeLayout = ({ children }) => {
               </button>
             </li>
             <li>
-              <Link to="/denied">Home</Link>
+              <Link to="/">Home</Link>
             </li>
             {isLoggedIn && role === "admin" && (
               <li>

@@ -2,10 +2,11 @@
 import HomeLayout from "../../Layouts/HomeLayout.jsx";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 
 const CourseDescription = () => {
   const { state } = useLocation();
+  const navigate=useNavigate();
 
   const { role, data } = useSelector((state) => state.auth);
 
@@ -43,7 +44,7 @@ const CourseDescription = () => {
                   Watch lectures
                 </button>
               ) : (
-                <button className="bg-yellow-500 text-lg rounded-lg font-bold px-5 py-3 w-full hover:bg-yellow-300 transition-all duration-300 shadow-md">
+                <button onClick={()=>navigate('/checkout')} className="bg-yellow-500 text-lg rounded-lg font-bold px-5 py-3 w-full hover:bg-yellow-300 transition-all duration-300 shadow-md">
                   Subscribe now
                 </button>
               )}
