@@ -17,40 +17,44 @@ import Profile from "./Pages/User/Profile.jsx";
 import EditProfile from "./Pages/User/EditProfile.jsx";
 import Checkout from "./Pages/Payment/Checkout.jsx";
 import CheckOutSuccess from "./Pages/Payment/CheckOutSuccess.jsx";
+import FailCheckout from "./Pages/Payment/FailCheckout.jsx";
+import DisplayLecture from "./Pages/Dasbord/DisplayLecture.jsx";
 
 function App() {
   return (
-
     <>
-    {/* <CheckOutSuccess/> */}
-    <Routes>
-      {/* 🌐 Public Routes */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/about" element={<AboutUs />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/course/description" element={<CourseDescription />} />
-      <Route path="/denied" element={<Denied />} />
+    <DisplayLecture />
+      {/* <FailCheckout/> */}
+      {/* <CheckOutSuccess/> */}
+      <Routes>
+        {/* 🌐 Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/course/description" element={<CourseDescription />} />
+        <Route path="/denied" element={<Denied />} />
 
-      {/* 🔐 Admin Protected Routes */}
-      <Route element={<RequireAuth allowedRole={["admin"]} />}>
-        <Route path="/course/create" element={<CreateCourse />} />
-      </Route>
+        {/* 🔐 Admin Protected Routes */}
+        <Route element={<RequireAuth allowedRole={["admin"]} />}>
+          <Route path="/course/create" element={<CreateCourse />} />
+        </Route>
 
-      {/* 🔐 User + Admin Protected Routes */}
-      <Route element={<RequireAuth allowedRole={["admin", "user"]} />}>
-        <Route path="/user/profile" element={<Profile />} />
-        <Route path="/user/editProfile" element={<EditProfile />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/checkout/success" element={<CheckOutSuccess />} />
+        {/* 🔐 User + Admin Protected Routes */}
+        <Route element={<RequireAuth allowedRole={["admin", "user"]} />}>
+          <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/editProfile" element={<EditProfile />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success" element={<CheckOutSuccess />} />
+          <Route path="/checkout/fail" element={<FailCheckout />} />
+          {/* <Route path="/course/diplaylactures" element={<DisplayLecture />} /> */}
+        </Route>
 
-      </Route>
-
-      {/* ❌ 404 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* ❌ 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 }
