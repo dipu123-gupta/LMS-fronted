@@ -20,12 +20,15 @@ import CheckOutSuccess from "./Pages/Payment/CheckOutSuccess.jsx";
 import FailCheckout from "./Pages/Payment/FailCheckout.jsx";
 import DisplayLecture from "./Pages/Dasbord/DisplayLecture.jsx";
 import AddLecture from "./Pages/Dasbord/AddLecture.jsx";
+import ChangePassword from "./Pages/User/ChangePassword.jsx";
+import ForgotPassword from "./Pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "./Pages/Auth/ResetPassword.jsx";
 
 function App() {
   return (
     <>
-    {/* <AddLecture /> */}
-    {/* <DisplayLecture /> */}
+      {/* <AddLecture /> */}
+      {/* <DisplayLecture /> */}
       {/* <FailCheckout/> */}
       {/* <CheckOutSuccess/> */}
       <Routes>
@@ -38,6 +41,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/course/description" element={<CourseDescription />} />
         <Route path="/denied" element={<Denied />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* 🔐 Admin Protected Routes */}
         <Route element={<RequireAuth allowedRole={["admin"]} />}>
@@ -53,6 +58,7 @@ function App() {
           <Route path="/checkout/success" element={<CheckOutSuccess />} />
           <Route path="/checkout/fail" element={<FailCheckout />} />
           <Route path="/course/diplaylactures" element={<DisplayLecture />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
         </Route>
 
         {/* ❌ 404 */}

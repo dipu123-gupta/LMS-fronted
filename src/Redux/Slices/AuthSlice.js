@@ -6,8 +6,8 @@ const initialState = {
   isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
   role: localStorage.getItem("role") || "",
   data: localStorage.getItem("data")
-  ? JSON.parse(localStorage.getItem("data"))
-  : {},
+    ? JSON.parse(localStorage.getItem("data"))
+    : {},
   // data: JSON.parse(localStorage.getItem("data")) || {},
   // ? JSON.parse(localStorage.getItem("data"))
   // : {},
@@ -68,18 +68,29 @@ export const updateProfile = createAsyncThunk(
       error: "Failed to update profile",
     });
     return (await res).data;
-  }
+  },
 );
-
 
 export const getUserData = createAsyncThunk("/user/details", async () => {
   try {
-    const res = axiosInstance.get('/user/profile');
+    const res = axiosInstance.get("/user/profile");
     return (await res).data;
   } catch (error) {
     toast.error(error?.message);
   }
 });
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/user/change-password", data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -102,7 +113,7 @@ const authSlice = createSlice({
         state.role = "";
         state.data = {};
       })
-      .addCase(getUserData.fulfilled,(state,action)=>{
+      .addCase(getUserData.fulfilled, (state, action) => {
         const user = action.payload.user;
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
@@ -111,6 +122,13 @@ const authSlice = createSlice({
         state.data = user;
         state.role = user.role;
       })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.isLoggedIn = false;
+        state.data = null;
+      })
+      .addCase(changePassword.rejected, (_, action) => {
+        toast.error(action.payload?.message || "Failed to change password");
+      });
   },
 });
 

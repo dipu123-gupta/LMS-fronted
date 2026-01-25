@@ -9,13 +9,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  //User input data State
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
 
-  //! Handle User Input State
   const handleUserInput = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
@@ -28,30 +26,28 @@ const Login = () => {
       return;
     }
 
-    //! dispatch create account action
     const response = await dispatch(login(loginData));
     if (response.payload.success) {
       navigate("/");
-
-      setLoginData({
-        email: "",
-        password: "",
-      });
+      setLoginData({ email: "", password: "" });
     }
   };
 
   return (
     <HomeLayout>
-      <div className="flex items-center justify-center h-[90vh]">
+      <div className="flex items-center justify-center min-h-[90vh] bg-gradient-to-br from-[#0f172a] to-[#020617]">
         <form
           onSubmit={onLogin}
           noValidate
-          className="flex flex-col justify-center gap-3 p-4 text-white w-96 shadow-[0_0_10px_black]"
+          className="flex flex-col gap-4 p-6 w-96  bg-white/5 backdrop-blur-xl  border border-white/10 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.7)] text-white"
         >
-          <h1 className="text-center text-2xl font-bold">Login Page</h1>
+          <h1 className="text-center text-2xl font-bold tracking-wide">
+            Login Page
+          </h1>
 
+          {/* Email */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="font-semibold">
+            <label htmlFor="email" className="font-semibold text-sm">
               Email
             </label>
             <input
@@ -60,14 +56,15 @@ const Login = () => {
               name="email"
               id="email"
               placeholder="Enter your email"
-              className="bg-transparent px-2 py-1 border"
+              className="bg-transparent px-3 py-2 border border-white/20 rounded focus:outline-none focus:border-yellow-400"
               onChange={handleUserInput}
               value={loginData.email}
             />
           </div>
 
+          {/* Password */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="font-semibold">
+            <label htmlFor="password" className="font-semibold text-sm">
               Password
             </label>
             <input
@@ -76,21 +73,34 @@ const Login = () => {
               name="password"
               id="password"
               placeholder="Enter your password"
-              className="bg-transparent px-2 py-1 border"
+              className="bg-transparent px-3 py-2 border border-white/20 rounded focus:outline-none focus:border-yellow-400"
               onChange={handleUserInput}
               value={loginData.password}
             />
+
+            <Link
+              to="/forgot-password"
+              className="text-sm text-yellow-400 hover:underline self-end"
+            >
+              Forgot password ?
+            </Link>
           </div>
+
+          {/* Button */}
           <button
             type="submit"
-            className=" mt-2 bg-yellow-600 hover:bg-yellow-400 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer"
+            className="mt-2 bg-yellow-500 hover:bg-yellow-600 transition-all duration-300 rounded-md py-2 font-bold text-black text-lg"
           >
             Login
           </button>
 
-          <p className="text-center">
-            Do not hava an account  ?{" "}
-            <Link to="/signup" className="link text-accent cursor-pointer">
+          {/* Signup */}
+          <p className="text-center text-sm text-gray-300">
+            Do not have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-yellow-400 font-semibold hover:underline"
+            >
               Signup
             </Link>
           </p>
