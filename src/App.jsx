@@ -19,11 +19,13 @@ import Checkout from "./Pages/Payment/Checkout.jsx";
 import CheckOutSuccess from "./Pages/Payment/CheckOutSuccess.jsx";
 import FailCheckout from "./Pages/Payment/FailCheckout.jsx";
 import DisplayLecture from "./Pages/Dasbord/DisplayLecture.jsx";
+import AddLecture from "./Pages/Dasbord/AddLecture.jsx";
 
 function App() {
   return (
     <>
-    <DisplayLecture />
+    {/* <AddLecture /> */}
+    {/* <DisplayLecture /> */}
       {/* <FailCheckout/> */}
       {/* <CheckOutSuccess/> */}
       <Routes>
@@ -40,6 +42,7 @@ function App() {
         {/* 🔐 Admin Protected Routes */}
         <Route element={<RequireAuth allowedRole={["admin"]} />}>
           <Route path="/course/create" element={<CreateCourse />} />
+          <Route path="/course/addlecture" element={<AddLecture />} />
         </Route>
 
         {/* 🔐 User + Admin Protected Routes */}
@@ -49,7 +52,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success" element={<CheckOutSuccess />} />
           <Route path="/checkout/fail" element={<FailCheckout />} />
-          {/* <Route path="/course/diplaylactures" element={<DisplayLecture />} /> */}
+          <Route path="/course/diplaylactures" element={<DisplayLecture />} />
         </Route>
 
         {/* ❌ 404 */}

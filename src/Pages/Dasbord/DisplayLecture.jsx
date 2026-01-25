@@ -11,27 +11,21 @@ const DisplayLecture = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 📦 Course data from CourseCard navigation
   const { state } = useLocation();
 
-  // ✅ SAFE selector (undefined crash fix)
   const lectures = useSelector(
     (state) => state.lecture?.lectures || []
   );
 
-  // 👤 User role
   const { role } = useSelector((state) => state.auth);
 
-  // ▶️ Current playing lecture index
   const [currentVideo, setCurrentVideo] = useState(0);
 
-  // ❌ Delete lecture (Admin only)
   const onLectureDelete = async (courseId, lectureId) => {
     await dispatch(deleteCourseLecture({ courseId, lectureId }));
     await dispatch(getCourseLecture(courseId));
   };
 
-  // 🔁 Fetch lectures on load
   useEffect(() => {
     if (!state?._id) {
       navigate("/courses");
@@ -45,16 +39,16 @@ const DisplayLecture = () => {
     <HomeLayout>
       <div className="flex flex-col gap-10 items-center justify-center min-h-[90vh] text-white py-10 mx-10">
 
-        {/* 📘 Course Title */}
+        {/* Course Title */}
         <div className="text-center font-semibold text-2xl text-yellow-500">
           Course Name: {state?.title}
         </div>
 
-        {/* ✅ Proper conditional rendering */}
-        {lectures.length > 0 && (
+        {/* ✅ FIXED CONDITIONAL RENDERING */}
+        {lectures.length > 0 ? (
           <div className="flex justify-center gap-10 w-full">
 
-            {/* 🎥 VIDEO PLAYER (LEFT) */}
+            {/* VIDEO PLAYER */}
             <div className="space-y-5 w-[28rem] p-2 rounded-lg shadow-[0_0_10px_black]">
               <video
                 src={lectures[currentVideo]?.lecture?.secure_url}
@@ -65,7 +59,6 @@ const DisplayLecture = () => {
                 muted
               />
 
-              {/* 📄 Lecture Info */}
               <div className="p-4 space-y-2">
                 <h2>
                   <span className="text-yellow-500">Title: </span>
@@ -79,12 +72,11 @@ const DisplayLecture = () => {
               </div>
             </div>
 
-            {/* 📑 LECTURE LIST (RIGHT) */}
+            {/* LECTURE LIST */}
             <ul className="w-[28rem] p-2 rounded-lg shadow-[0_0_10px_black] space-y-4">
               <li className="font-semibold text-xl text-yellow-500 flex items-center justify-between">
                 <p>Lecture List</p>
 
-                {/* ➕ Add lecture (Admin only) */}
                 {role === "admin" && (
                   <button
                     onClick={() =>
@@ -110,7 +102,6 @@ const DisplayLecture = () => {
                     Lecture {index + 1}: {lecture.title}
                   </p>
 
-                  {/* ❌ Delete lecture (Admin only) */}
                   {role === "admin" && (
                     <button
                       onClick={() =>
@@ -125,6 +116,17 @@ const DisplayLecture = () => {
               ))}
             </ul>
           </div>
+        ) : (
+          role === "admin" && (
+            <button
+              onClick={() =>
+                navigate("/course/addLecture", { state: { ...state } })
+              }
+              className="bg-yellow-500 px-4 py-2 rounded-md text-black font-semibold"
+            >
+              Add Lecture
+            </button>
+          )
         )}
       </div>
     </HomeLayout>

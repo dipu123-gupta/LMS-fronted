@@ -6,9 +6,7 @@ const initialState = {
   lectures: [],
 };
 
-/* ======================
-   GET COURSE LECTURES
-====================== */
+/* GET LECTURES */
 export const getCourseLecture = createAsyncThunk(
   "/course/lecture/get",
   async (cid) => {
@@ -30,15 +28,13 @@ export const getCourseLecture = createAsyncThunk(
   }
 );
 
-/* ======================
-   ADD COURSE LECTURE
-====================== */
+/* ADD LECTURE */
 export const addCourseLecture = createAsyncThunk(
   "/course/lecture/add",
   async (data) => {
     try {
       const formData = new FormData();
-      formData.append("lecture", data.lecture); // file
+      formData.append("lecture", data.lecture);
       formData.append("title", data.title);
       formData.append("description", data.description);
 
@@ -62,9 +58,7 @@ export const addCourseLecture = createAsyncThunk(
   }
 );
 
-/* ======================
-   DELETE COURSE LECTURE
-====================== */
+/* DELETE LECTURE */
 export const deleteCourseLecture = createAsyncThunk(
   "/course/lecture/delete",
   async ({ courseId, lectureId }) => {
@@ -88,9 +82,6 @@ export const deleteCourseLecture = createAsyncThunk(
   }
 );
 
-/* ======================
-   SLICE
-====================== */
 const lectureSlice = createSlice({
   name: "lecture",
   initialState,
@@ -98,10 +89,10 @@ const lectureSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCourseLecture.fulfilled, (state, action) => {
-        state.lectures = action?.payload?.lectures;
+        state.lectures = action?.payload?.lectures || [];
       })
       .addCase(addCourseLecture.fulfilled, (state, action) => {
-        state.lectures = action?.payload?.course?.lectures;
+        state.lectures = action?.payload?.course?.lectures || [];
       });
   },
 });
