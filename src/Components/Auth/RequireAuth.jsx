@@ -2,7 +2,14 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const RequireAuth = ({ allowedRole }) => {
-  const { isLoggedIn, role } = useSelector((state) => state.auth);
+  const { isLoggedIn, role, loading } = useSelector(
+    (state) => state.auth
+  );
+
+  // 🔥 IMPORTANT FIX
+  if (loading) {
+    return null; // or loader
+  }
 
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;

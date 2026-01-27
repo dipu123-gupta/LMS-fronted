@@ -6,8 +6,12 @@ const initialState = {
   isLoggedIn: false,
   role: "",
   data: {},
+  loading: true, // ✅ auth hydration flag
 };
 
+/* ======================
+   REGISTER
+====================== */
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
   try {
     const res = axiosInstance.post("/user/register", data);
@@ -23,6 +27,9 @@ export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
   }
 });
 
+/* ======================
+   LOGIN
+====================== */
 export const login = createAsyncThunk("/auth/login", async (data) => {
   try {
     const res = axiosInstance.post("/user/login", data);
@@ -38,6 +45,9 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
   }
 });
 
+/* ======================
+   LOGOUT
+====================== */
 export const logout = createAsyncThunk("/auth/logout", async () => {
   try {
     const res = axiosInstance.post("/user/logout");
@@ -53,6 +63,9 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
   }
 });
 
+/* ======================
+   UPDATE PROFILE
+====================== */
 export const updateProfile = createAsyncThunk(
   "/user/update/profile",
   async ({ id, formData }) => {
@@ -66,15 +79,21 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+/* ======================
+   LOAD USER (REFRESH FIX)
+====================== */
 export const getUserData = createAsyncThunk("/user/details", async () => {
   try {
-    const res = axiosInstance.get("/user/profile");
-    return (await res).data;
+    const res = await axiosInstance.get("/user/profile");
+    return res.data;
   } catch (error) {
-    toast.error(error?.message);
+    throw error;
   }
 });
 
+/* ======================
+   CHANGE PASSWORD
+====================== */
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (data, { rejectWithValue }) => {
@@ -93,29 +112,10 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // ✅ FIXED HERE (ONLY THIS LINE CHANGED)
+      /* LOGIN */
       .addCase(login.fulfilled, (state, action) => {
-        if (!action.payload?.user) return; // 🔥 ERROR FIX
-        const user = action.payload.user;
+        state.loading = false; // ✅ FIX
 
-        localStorage.setItem("data", JSON.stringify(user));
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("role", user.role);
-
-        state.isLoggedIn = true;
-        state.data = user;
-        state.role = user.role;
-      })
-
-      .addCase(logout.fulfilled, (state) => {
-        localStorage.clear();
-        state.isLoggedIn = false;
-        state.role = "";
-        state.data = {};
-      })
-
-      // (ye pehle se sahi tha)
-      .addCase(getUserData.fulfilled, (state, action) => {
         if (!action.payload?.user) return;
         const user = action.payload.user;
 
@@ -128,6 +128,37 @@ const authSlice = createSlice({
         state.role = user.role;
       })
 
+      /* LOGOUT */
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false; // ✅ FIX
+        localStorage.clear();
+        state.isLoggedIn = false;
+        state.role = "";
+        state.data = {};
+      })
+
+      /* LOAD USER (REFRESH) */
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.loading = false; // ✅ FIX
+
+        if (!action.payload?.user) return;
+        const user = action.payload.user;
+
+        localStorage.setItem("data", JSON.stringify(user));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", user.role);
+
+        state.isLoggedIn = true;
+        state.data = user;
+        state.role = user.role;
+      })
+
+      .addCase(getUserData.rejected, (state) => {
+        state.loading = false; // ✅ VERY IMPORTANT
+        state.isLoggedIn = false;
+      })
+
+      /* CHANGE PASSWORD */
       .addCase(changePassword.fulfilled, (state) => {
         state.isLoggedIn = false;
         state.data = null;

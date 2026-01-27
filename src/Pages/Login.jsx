@@ -21,23 +21,20 @@ const Login = () => {
 
   const onLogin = async (event) => {
     event.preventDefault();
+
     if (!loginData.email || !loginData.password) {
       toast.error("Please fill all the Details");
       return;
     }
 
-    // const response = await dispatch(login(loginData));
-    // if (response?.payload?.success) {
-    //   navigate("/");
-    //   setLoginData({ email: "", password: "" });
-    // }
-
     const response = await dispatch(login(loginData));
 
-    if (res?.payload?.success) {
+    // ✅ FIXED HERE
+    if (response?.payload?.success) {
       navigate("/");
+      setLoginData({ email: "", password: "" });
     } else {
-      toast.error(res?.payload?.message || "Login failed");
+      toast.error(response?.payload?.message || "Login failed");
     }
   };
 
@@ -47,7 +44,7 @@ const Login = () => {
         <form
           onSubmit={onLogin}
           noValidate
-          className="flex flex-col gap-4 p-6 w-96  bg-white/5 backdrop-blur-xl  border border-white/10 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.7)] text-white"
+          className="flex flex-col gap-4 p-6 w-96 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.7)] text-white"
         >
           <h1 className="text-center text-2xl font-bold tracking-wide">
             Login Page
