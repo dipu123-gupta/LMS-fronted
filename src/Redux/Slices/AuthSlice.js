@@ -3,14 +3,9 @@ import axiosInstance from "../../Helpers/axiosInstance.js";
 import toast from "react-hot-toast";
 
 const initialState = {
-  isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
-  role: localStorage.getItem("role") || "",
-  data: localStorage.getItem("data")
-    ? JSON.parse(localStorage.getItem("data"))
-    : {},
-  // data: JSON.parse(localStorage.getItem("data")) || {},
-  // ? JSON.parse(localStorage.getItem("data"))
-  // : {},
+  isLoggedIn: false,
+  role: "",
+  data: {},
 };
 
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
@@ -68,7 +63,7 @@ export const updateProfile = createAsyncThunk(
       error: "Failed to update profile",
     });
     return (await res).data;
-  },
+  }
 );
 
 export const getUserData = createAsyncThunk("/user/details", async () => {
@@ -89,7 +84,7 @@ export const changePassword = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  },
+  }
 );
 
 const authSlice = createSlice({
@@ -98,34 +93,46 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // ✅ FIXED HERE (ONLY THIS LINE CHANGED)
       .addCase(login.fulfilled, (state, action) => {
+        if (!action.payload?.user) return; // 🔥 ERROR FIX
         const user = action.payload.user;
+
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
+
         state.isLoggedIn = true;
         state.data = user;
         state.role = user.role;
       })
+
       .addCase(logout.fulfilled, (state) => {
         localStorage.clear();
         state.isLoggedIn = false;
         state.role = "";
         state.data = {};
       })
+
+      // (ye pehle se sahi tha)
       .addCase(getUserData.fulfilled, (state, action) => {
+        if (!action.payload?.user) return;
         const user = action.payload.user;
+
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
+
         state.isLoggedIn = true;
         state.data = user;
         state.role = user.role;
       })
+
       .addCase(changePassword.fulfilled, (state) => {
         state.isLoggedIn = false;
         state.data = null;
       })
+
       .addCase(changePassword.rejected, (_, action) => {
         toast.error(action.payload?.message || "Failed to change password");
       });

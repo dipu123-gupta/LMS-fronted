@@ -1,43 +1,40 @@
-import { AiFillCheckCircle } from "react-icons/ai";
+import React, { useEffect } from "react";
 import HomeLayout from "../../Layouts/HomeLayout.jsx";
-import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getUserData } from "../../Redux/Slices/AuthSlice.js";
 
 const CheckOutSuccess = () => {
+  const dispatch = useDispatch(); // ✅ FIX
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 🔄 refresh user after payment
+    dispatch(getUserData());
+
+    // ⏳ auto redirect after 3 sec
+    const timer = setTimeout(() => {
+      navigate("/");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [dispatch, navigate]);
+
   return (
     <HomeLayout>
-      <div className="min-h-[90vh] flex items-center justify-center text-white bg-gradient-to-br from-[#0f172a] to-[#020617]">
-        <div className="w-96 h-[28rem] flex flex-col justify-center items-center  bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.7)]  rounded-2xl relative overflow-hidden">
-
-          {/* Header */}
-          <h1 className="bg-green-500 absolute top-0 w-full py-4 text-center  text-2xl font-bold tracking-wide">
-            Payment Successfully
+      <div className="min-h-[90vh] flex items-center justify-center text-white">
+        <div className="bg-white/10 p-8 rounded-xl shadow-xl text-center space-y-4">
+          <h1 className="text-3xl font-bold text-green-400">
+            🎉 Payment Successful!
           </h1>
 
-          {/* Content */}
-          <div className="px-6 flex flex-col items-center justify-center gap-4 mt-10">
-            <AiFillCheckCircle className="text-green-400 text-6xl drop-shadow-lg" />
+          <p className="text-gray-200">
+            Your course has been unlocked successfully.
+          </p>
 
-            <div className="text-center space-y-2">
-              <h2 className="text-xl font-semibold text-green-400">
-                Welcome to the Pro Bundle
-              </h2>
-              <p className="text-gray-300 text-sm">
-                Now you can enjoy all the courses without limits 🚀
-              </p>
-            </div>
-          </div>
-
-          {/* Button */}
-          <Link
-            to="/"
-            className="absolute bottom-0 w-full text-center 
-                       bg-green-500 hover:bg-green-600 
-                       transition-all duration-300 
-                       py-3 font-bold text-lg"
-          >
-            <button>Go to Dashboard</button>
-          </Link>
+          <p className="text-sm text-gray-400">
+            Redirecting to home page...
+          </p>
         </div>
       </div>
     </HomeLayout>

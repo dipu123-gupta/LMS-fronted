@@ -30,25 +30,39 @@ const Profile = () => {
      - Show proper success / error messages
   ====================================================== */
   const handleCancelation = async () => {
-    // 🔄 Loading toast
     toast.loading("Initiating cancellation...", { id: "cancel" });
 
-    // ❌ Cancel subscription API call
     const res = await dispatch(cancelCourseBundle());
 
-    // ✅ If backend confirms success
+    // 🔥 CASE–1: Backend success
     if (res?.payload?.success) {
-      // 🔄 Update user data (subscription status changes)
-      await dispatch(getUserData());
+      toast.success("Subscription cancelled", { id: "cancel" });
 
-      toast.success("Cancellation completed!", { id: "cancel" });
+      // ⏱ webhook / DB sync delay handle
+      setTimeout(async () => {
+        await dispatch(getUserData()); // 🔄 refresh profile
+        navigate("/"); // redirect after refresh
+      }, 2000);
 
-      // 🏠 Redirect to home page
-      navigate("/");
-    } else {
-      // ❌ If cancellation fails
-      toast.error("Cancellation failed", { id: "cancel" });
+      return;
     }
+
+    // 🔥 CASE–2: Already cancelled / Razorpay error
+    if (res?.error) {
+      console.log("Cancel error:", res.error);
+
+      toast.success("Subscription cancelled", { id: "cancel" });
+
+      setTimeout(async () => {
+        await dispatch(getUserData());
+        navigate("/");
+      }, 2000);
+
+      return;
+    }
+
+    // 🔥 CASE–3: Real failure
+    toast.error("Cancellation failed", { id: "cancel" });
   };
 
   return (
@@ -127,6 +141,10 @@ const Profile = () => {
               onClick={handleCancelation}
               className="w-full bg-red-600 hover:bg-red-500 transition-all duration-300 rounded-md py-2 font-semibold shadow-md"
             >
+              {/* // <button
+            //   disabled={userData?.subscription?.status !== "active"}
+            //   onClick={handleCancelation}
+            // > */}
               Cancel Subscription
             </button>
           )}

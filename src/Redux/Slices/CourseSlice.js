@@ -6,6 +6,9 @@ const initialState = {
   courseData: [],
 };
 
+/* =====================
+   GET ALL COURSES
+===================== */
 export const getAllCourses = createAsyncThunk(
   "courses/getAll",
   async (_, { rejectWithValue }) => {
@@ -18,19 +21,19 @@ export const getAllCourses = createAsyncThunk(
         error: "Failed to get the courses",
       });
 
-      const { data } = await response;
-
-      return data.courses;
+      return (await response).data.courses;
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(error?.response?.data?.message);
       return rejectWithValue(error.response?.data);
     }
-  },
+  }
 );
 
-
+/* =====================
+   CREATE NEW COURSE  ✅
+===================== */
 export const createNewCourse = createAsyncThunk(
-  "course/create",
+  "courses/create",
   async (formData, { rejectWithValue }) => {
     try {
       const response = axiosInstance.post("/courses", formData);
@@ -49,6 +52,28 @@ export const createNewCourse = createAsyncThunk(
   }
 );
 
+/* =====================
+   DELETE COURSE
+===================== */
+export const deleteCourses = createAsyncThunk(
+  "courses/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = axiosInstance.delete(`/courses/${id}`);
+
+      toast.promise(response, {
+        loading: "Deleting course...",
+        success: "Course deleted successfully",
+        error: "Failed to delete the course",
+      });
+
+      return (await response).data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 
 const courseSlice = createSlice({
   name: "courses",

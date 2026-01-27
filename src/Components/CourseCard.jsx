@@ -48,6 +48,8 @@ const CourseCard = ({ data }) => {
           </p>
         </div>
       </div>
+
+      
     </div>
   );
 };

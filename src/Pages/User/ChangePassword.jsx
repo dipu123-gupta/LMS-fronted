@@ -1,34 +1,29 @@
 import React, { useState } from "react";
 import HomeLayout from "../../Layouts/HomeLayout.jsx";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import { changePassword } from "../../Redux/Slices/AuthSlice.js";
-import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.newPassword.length < 6) {
-      return alert("Password must be at least 6 characters");
+    if (!formData.oldPassword || !formData.newPassword) {
+      toast.error("All fields are required");
+      return;
     }
 
     const res = await dispatch(changePassword(formData));
 
     if (res?.payload?.success) {
-      toast.success(res.payload.message);
-      navigate("/login"); // 👈 force re-login
+      toast.success("Password changed successfully");
     }
   };
 
@@ -37,29 +32,34 @@ const ChangePassword = () => {
       <div className="min-h-[90vh] flex items-center justify-center text-white">
         <form
           onSubmit={handleSubmit}
-          className="w-96 p-6 bg-[#0f172a] rounded-xl shadow-lg space-y-4"
+          className="bg-white/10 p-6 rounded-xl w-96 space-y-4"
         >
-          <h1 className="text-xl font-bold text-yellow-400 text-center">
-            Change Password
-          </h1>
+          <h1 className="text-2xl font-bold text-center">Change Password</h1>
 
           <input
             type="password"
-            name="oldPassword"
             placeholder="Old Password"
-            onChange={handleChange}
-            className="w-full px-3 py-2 bg-transparent border rounded"
+            value={formData.oldPassword}
+            onChange={(e) =>
+              setFormData({ ...formData, oldPassword: e.target.value })
+            }
+            className="w-full p-2 rounded bg-black/40"
           />
 
           <input
             type="password"
-            name="newPassword"
             placeholder="New Password"
-            onChange={handleChange}
-            className="w-full px-3 py-2 bg-transparent border rounded"
+            value={formData.newPassword}
+            onChange={(e) =>
+              setFormData({ ...formData, newPassword: e.target.value })
+            }
+            className="w-full p-2 rounded bg-black/40"
           />
 
-          <button className="w-full bg-yellow-400 text-black py-2 rounded font-semibold hover:bg-yellow-500">
+          <button
+            type="submit"
+            className="w-full bg-yellow-500 text-black py-2 rounded font-semibold"
+          >
             Update Password
           </button>
         </form>

@@ -26,10 +26,18 @@ const Login = () => {
       return;
     }
 
+    // const response = await dispatch(login(loginData));
+    // if (response?.payload?.success) {
+    //   navigate("/");
+    //   setLoginData({ email: "", password: "" });
+    // }
+
     const response = await dispatch(login(loginData));
-    if (response.payload.success) {
+
+    if (res?.payload?.success) {
       navigate("/");
-      setLoginData({ email: "", password: "" });
+    } else {
+      toast.error(res?.payload?.message || "Login failed");
     }
   };
 

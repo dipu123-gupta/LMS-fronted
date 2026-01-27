@@ -1,64 +1,85 @@
-import { useDispatch, useSelector } from "react-redux";
-import HomeLayout from "../../Layouts/HomeLayout.jsx";
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BiRupee } from "react-icons/bi";
-import { useNavigate } from "react-router-dom"; // ✅ react-router-dom सही है
+import toast from "react-hot-toast";
+
+import HomeLayout from "../../Layouts/HomeLayout.jsx";
+
+// Razorpay actions
 import {
   getRazorpayId,
   purchaseCourseBundle,
   verifyUserPayment,
 } from "../../Redux/Slices/RazorpaySlice.js";
-import toast from "react-hot-toast";
+
+// Refresh user after payment
+import { getUserData } from "../../Redux/Slices/AuthSlice.js";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { state } = useLocation();
 
-  // 🔑 Razorpay public key (backend se)
+  // 🔑 courseId jo CourseDescription se aaya
+  const courseId = state?.courseId;
+
+  // Razorpay state
   const razorpayKey = useSelector((state) => state?.razorpay?.key);
-
-  // 🆔 Subscription ID (razorpay subscription create hone ke baad)
-  const subscription_id = useSelector(
-    (state) => state?.razorpay?.subscription_id,
+  const subscriptionId = useSelector(
+    (state) => state?.razorpay?.subscription_id
   );
 
-  // 👤 Logged-in user data (auth slice se aata hai)
-  const userData = useSelector((state) => state?.auth?.data);
+  // Logged-in user
+  const user = useSelector((state) => state?.auth?.data);
 
   /* =========================
-     HANDLE SUBSCRIPTION
+     INITIAL LOAD
+     - Razorpay key
+     - Create subscription (course-wise)
+  ========================== */
+  useEffect(() => {
+    if (!courseId) {
+      toast.error("Invalid course selection");
+      navigate("/");
+      return;
+    }
+
+    (async () => {
+      await dispatch(getRazorpayId());
+      await dispatch(purchaseCourseBundle({ courseId }));
+    })();
+  }, [courseId, dispatch, navigate]);
+
+  /* =========================
+     HANDLE PAYMENT
   ========================== */
   const handleSubscription = async (e) => {
     e.preventDefault();
 
-    // ❌ Agar key ya subscription id hi nahi mili
-    if (!razorpayKey || !subscription_id) {
+    if (!razorpayKey || !subscriptionId) {
       toast.error("Payment initialization failed");
       return;
     }
 
-    // 🔧 Razorpay options
     const options = {
-      key: razorpayKey, // public key
-      subscription_id: subscription_id, // subscription id
+      key: razorpayKey,
+      subscription_id: subscriptionId,
       name: "Coursify Pvt Ltd",
-      description: "Course Subscription",
+      description: "Course Purchase",
 
-      // 🎨 Razorpay theme
       theme: {
-        color: "#f37254",
+        color: "#facc15",
       },
 
-      // 👤 Auto-fill user info
       prefill: {
-        email: userData?.email,
-        name: userData?.name,
+        name: user?.name,
+        email: user?.email,
       },
 
-      // ✅ Payment success handler
       handler: async (response) => {
         /*
-          response me Razorpay ye deta hai:
+          Razorpay returns:
           - razorpay_payment_id
           - razorpay_subscription_id
           - razorpay_signature
@@ -68,41 +89,30 @@ const Checkout = () => {
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_subscription_id: response.razorpay_subscription_id,
           razorpay_signature: response.razorpay_signature,
+          courseId, // 🔥 IMPORTANT
         };
 
-        // 🔐 Backend me payment verify
         const res = await dispatch(verifyUserPayment(paymentDetails));
 
-        // ✅ Verification success / fail
         if (res?.payload?.success) {
-          toast.success("Payment verified successfully");
-          navigate("/checkout/success");
+          toast.success("Payment successful! Activating course...");
+
+          // 🔥 Webhook delay handle
+          setTimeout(async () => {
+            await dispatch(getUserData()); // refresh user
+            navigate("/checkout/success", {
+              state: { courseId },
+            });
+          }, 100);
         } else {
           toast.error("Payment verification failed");
-          navigate("/checkout/fail");
         }
       },
     };
 
-    // 🚀 Razorpay popup open
     const razorpay = new window.Razorpay(options);
     razorpay.open();
   };
-
-  /* =========================
-     INITIAL LOAD
-     - Razorpay key lao
-     - Subscription create karo
-  ========================== */
-  const load = async () => {
-    await dispatch(getRazorpayId()); // 🔑 key
-    await dispatch(purchaseCourseBundle()); // 🆔 subscription
-  };
-
-  // ⏳ Page load par call hoga
-  useEffect(() => {
-    load();
-  }, []);
 
   return (
     <HomeLayout>
@@ -110,44 +120,41 @@ const Checkout = () => {
         onSubmit={handleSubscription}
         className="min-h-[90vh] flex items-center justify-center text-white"
       >
-        <div
-          className="w-80 h-[27rem] flex flex-col justify-between rounded-2xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 shadow-xl hover:shadow-yellow-500/20 transition-all duration-300"
-        >
+        <div className="w-80 h-[27rem] flex flex-col justify-between rounded-2xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 shadow-xl">
+          
           {/* HEADER */}
-          <h1
-            className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-center py-4 text-2xl font-extrabold tracking-wide"
-          >
-            Subscription Bundle
+          <h1 className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-center py-4 text-2xl font-extrabold text-black">
+            Course Checkout
           </h1>
 
           {/* CONTENT */}
           <div className="px-5 py-4 space-y-4 text-center">
-            <p className="text-[15px] leading-relaxed text-gray-200">
-              This purchase will allow you to access all available courses on
-              our platform for{" "}
-              <span className="text-yellow-400 font-bold">1 Year</span>.
+            <p className="text-sm text-gray-200">
+              You are purchasing access to this course.
               <br />
-              All existing & newly launched courses included.
+              <span className="text-yellow-400 font-semibold">
+                Lifetime access included
+              </span>
             </p>
 
             <p className="flex items-center justify-center gap-1 text-3xl font-extrabold text-yellow-400">
               <BiRupee />
               <span>999</span>
-              <span className="text-sm text-gray-300 font-medium">/year</span>
             </p>
 
-            <div className="text-sm text-gray-400 space-y-1">
-              <p>✔ 100% refund on cancellation</p>
-              <p>* Terms & conditions apply</p>
+            <div className="text-xs text-gray-400">
+              <p>✔ One-time payment</p>
+              <p>✔ Full course access</p>
+              <p>✔ No auto-renewal</p>
             </div>
           </div>
 
           {/* BUTTON */}
           <button
             type="submit"
-            className="w-full py-3 text-xl font-bold bg-yellow-400 text-black hover:bg-yellow-500 active:scale-[0.98] transition-all duration-300 cursor-pointer"
+            className="w-full py-3 text-xl font-bold bg-yellow-400 text-black hover:bg-yellow-500 transition-all"
           >
-            Buy Now 🚀
+            Pay Now 🚀
           </button>
         </div>
       </form>

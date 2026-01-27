@@ -14,13 +14,11 @@ axiosInstance.interceptors.response.use(
     const status = error?.response?.status;
 
     if (status === 401) {
-      // 🔥 Auto logout
       localStorage.clear();
-      window.location.href = "/login";
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;
