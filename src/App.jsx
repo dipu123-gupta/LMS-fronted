@@ -42,7 +42,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/courses" element={<Courses />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/course/description" element={<CourseDescription />} />
+      <Route path="/course/description/:id" element={<CourseDescription />} />
       <Route path="/denied" element={<Denied />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />

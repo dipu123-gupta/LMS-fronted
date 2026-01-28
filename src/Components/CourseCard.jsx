@@ -6,7 +6,11 @@ const CourseCard = ({ data }) => {
 
   return (
     <div
-      onClick={() => navigate(`/course/description/`, { state: { ...data } })}
+      onClick={() =>
+        navigate(`/course/description/${data._id}`, {
+          state: { ...data },
+        })
+      }
       className=" text-white w-[22rem] h-[450px] cursor-pointer rounded-2xl overflow-hidden group bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:shadow-yellow-500/20 hover:-translate-y-2 transition-all duration-300"
     >
       {/* IMAGE */}
@@ -43,10 +47,21 @@ const CourseCard = ({ data }) => {
           </p>
 
           <p>
-            <span className="text-yellow-400 font-semibold">
-              Course Prise:
-            </span>{" "}
-            {data.price === 0 ? "Free" : `₹ ${data.price}`}
+            <span className="text-yellow-400 font-semibold">Price:</span>{" "}
+            {data.isFree ? (
+              <span className="text-green-400 font-bold">FREE</span>
+            ) : (
+              <>
+                {data.discount > 0 && (
+                  <span className="line-through text-gray-400 mr-2">
+                    ₹ {data.price}
+                  </span>
+                )}
+                <span className="text-green-400 font-bold">
+                  ₹ {data.finalPrice}
+                </span>
+              </>
+            )}
           </p>
 
           <p>
@@ -55,8 +70,6 @@ const CourseCard = ({ data }) => {
           </p>
         </div>
       </div>
-
-      
     </div>
   );
 };

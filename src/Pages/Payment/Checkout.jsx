@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BiRupee } from "react-icons/bi";
@@ -21,22 +21,20 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  // 🔑 courseId jo CourseDescription se aaya
+  // 🔑 courseId from CourseDescription
   const courseId = state?.courseId;
 
-  // Razorpay state
+  // Razorpay key
   const razorpayKey = useSelector((state) => state?.razorpay?.key);
-  const subscriptionId = useSelector(
-    (state) => state?.razorpay?.subscription_id
-  );
 
   // Logged-in user
   const user = useSelector((state) => state?.auth?.data);
 
+  // ✅ ORDER DATA (IMPORTANT)
+  const [orderData, setOrderData] = useState(null);
+
   /* =========================
      INITIAL LOAD
-     - Razorpay key
-     - Create subscription (course-wise)
   ========================== */
   useEffect(() => {
     if (!courseId) {
@@ -47,7 +45,16 @@ const Checkout = () => {
 
     (async () => {
       await dispatch(getRazorpayId());
-      await dispatch(purchaseCourseBundle({ courseId }));
+
+      const res = await dispatch(
+        purchaseCourseBundle({ courseId })
+      );
+
+      if (res?.payload?.success) {
+        setOrderData(res.payload);
+      } else {
+        toast.error("Payment initialization failed");
+      }
     })();
   }, [courseId, dispatch, navigate]);
 
@@ -57,16 +64,18 @@ const Checkout = () => {
   const handleSubscription = async (e) => {
     e.preventDefault();
 
-    if (!razorpayKey || !subscriptionId) {
+    if (!razorpayKey || !orderData?.order) {
       toast.error("Payment initialization failed");
       return;
     }
 
     const options = {
       key: razorpayKey,
-      subscription_id: subscriptionId,
+      amount: orderData.order.amount,
+      currency: "INR",
       name: "Coursify Pvt Ltd",
       description: "Course Purchase",
+      order_id: orderData.order.id,
 
       theme: {
         color: "#facc15",
@@ -78,35 +87,34 @@ const Checkout = () => {
       },
 
       handler: async (response) => {
-        /*
-          Razorpay returns:
-          - razorpay_payment_id
-          - razorpay_subscription_id
-          - razorpay_signature
-        */
-
         const paymentDetails = {
           razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_subscription_id: response.razorpay_subscription_id,
+          razorpay_order_id: response.razorpay_order_id,
           razorpay_signature: response.razorpay_signature,
-          courseId, // 🔥 IMPORTANT
+          courseId,
+          amount: orderData.amount,
         };
 
-        const res = await dispatch(verifyUserPayment(paymentDetails));
+        const res = await dispatch(
+          verifyUserPayment(paymentDetails)
+        );
 
         if (res?.payload?.success) {
-          toast.success("Payment successful! Activating course...");
+          toast.success("Payment successful 🎉");
 
-          // 🔥 Webhook delay handle
-          setTimeout(async () => {
-            await dispatch(getUserData()); // refresh user
-            navigate("/checkout/success", {
-              state: { courseId },
-            });
-          }, 100);
+          await dispatch(getUserData());
+          navigate("/checkout/success", {
+            state: { courseId },
+          });
         } else {
           toast.error("Payment verification failed");
         }
+      },
+
+      modal: {
+        ondismiss: () => {
+          toast.error("Payment cancelled");
+        },
       },
     };
 
@@ -139,7 +147,7 @@ const Checkout = () => {
 
             <p className="flex items-center justify-center gap-1 text-3xl font-extrabold text-yellow-400">
               <BiRupee />
-              <span>999</span>
+              <span>{orderData?.amount || 0}</span>
             </p>
 
             <div className="text-xs text-gray-400">

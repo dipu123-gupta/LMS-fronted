@@ -73,12 +73,12 @@ const CreateCourse = () => {
     formData.append("createdBy", userInput.createdBy);
     formData.append("description", userInput.description);
     formData.append("thumbnail", userInput.thumbnail);
-    formData.append("price", Number(userInput.price));
+    formData.append("price",(userInput.price));
 
     // ✅ SAFE DISCOUNT
     formData.append(
       "discount",
-      userInput.discount === "" ? 0 : Number(userInput.discount)
+      userInput.discount === "" ? 0 :(userInput.discount)
     );
 
     const response = await dispatch(createNewCourse(formData));

@@ -106,7 +106,7 @@ const razorpaySlice = createSlice({
         state.key = action.payload;
       })
       .addCase(purchaseCourseBundle.fulfilled, (state, action) => {
-        state.subscription_id = action.payload.subscription_id;
+        state.subscription_id = action.payload.order?.id;
       })
 
       /* Verify */
