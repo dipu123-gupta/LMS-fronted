@@ -43,6 +43,13 @@ const CourseCard = ({ data }) => {
           </p>
 
           <p>
+            <span className="text-yellow-400 font-semibold">
+              Course Prise:
+            </span>{" "}
+            {data.price === 0 ? "Free" : `₹ ${data.price}`}
+          </p>
+
+          <p>
             <span className="text-yellow-400 font-semibold">Instructor:</span>{" "}
             {data?.createdBy}
           </p>

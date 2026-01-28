@@ -13,12 +13,13 @@ axiosInstance.interceptors.response.use(
   (error) => {
     const status = error?.response?.status;
 
-    if (status === 401) {
-      localStorage.clear();
-    }
+    // 🚫 AUTO REDIRECT REMOVED (LOOP FIX)
+    // if (status === 401) {
+    //   window.location.href = "/login";
+    // }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

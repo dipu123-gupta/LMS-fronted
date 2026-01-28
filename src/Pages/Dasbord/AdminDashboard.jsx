@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { FcSalesPerformance } from "react-icons/fc";
 import { GiMoneyStack } from "react-icons/gi";
-import { getPaymentRecord } from "../../Redux/Slices/RazorpaySlice.js";
+import { getPaymentStats } from "../../Redux/Slices/RazorpaySlice.js";
 import { getStateData } from "../../Redux/Slices/StatSlice.js";
 import {
   deleteCourses,
@@ -38,26 +38,30 @@ const AdminDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ SAFE SELECTOR (FIXED)
+  /* =======================
+     REDUX DATA
+  ======================== */
   const { allUserCount = 0, subscribeCount = 0 } = useSelector(
     (state) => state.stat || {},
   );
 
-  const { allPayments = { count: 0 }, monthlySalesRecod = [] } = useSelector(
-    (state) => state.razorpay || {},
-  );
+  const {
+    monthlySalesRecod = [],
+    monthlyRevenue = [],
+    totalRevenue = 0,
+  } = useSelector((state) => state.razorpay || {});
 
   const myCourses = useSelector((state) => state.Courses?.courseData || []);
 
   /* =======================
-     PIE CHART DATA (FIXED)
+     PIE CHART (USERS)
   ======================== */
   const userData = {
-    labels: ["Register User", "Subscribed User"],
+    labels: ["Registered Users", "Subscribed Users"],
     datasets: [
       {
         label: "User Details",
-        data: [allUserCount || 0, subscribeCount || 0],
+        data: [allUserCount, subscribeCount],
         backgroundColor: ["#facc15", "#22c55e"],
         borderWidth: 1,
       },
@@ -65,7 +69,7 @@ const AdminDashboard = () => {
   };
 
   /* =======================
-     BAR CHART DATA (FIXED)
+     BAR CHART (SALES)
   ======================== */
   const salesData = {
     labels: [
@@ -84,17 +88,17 @@ const AdminDashboard = () => {
     ],
     datasets: [
       {
-        label: "Sales / Month",
-        data:
-          monthlySalesRecod.length > 0
-            ? monthlySalesRecod.map((v) => v || 0)
-            : new Array(12).fill(0),
+        label: "Revenue / Month",
+        data: monthlyRevenue?.length ? monthlyRevenue : new Array(12).fill(0),
         backgroundColor: "#f87171",
         borderWidth: 2,
       },
     ],
   };
 
+  /* =======================
+     DELETE COURSE
+  ======================== */
   const onCourseDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete the course ?")) {
       const res = await dispatch(deleteCourses(id));
@@ -104,10 +108,13 @@ const AdminDashboard = () => {
     }
   };
 
+  /* =======================
+     LOAD DATA ONCE
+  ======================== */
   useEffect(() => {
     dispatch(getAllCourses());
     dispatch(getStateData());
-    dispatch(getPaymentRecord());
+    dispatch(getPaymentStats());
   }, [dispatch]);
 
   return (
@@ -129,7 +136,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between p-5 shadow-md rounded-md">
                 <div>
                   <p>Registered Users</p>
-                  <h3 className="text-4xl font-bold">{allUserCount}</h3>
+                  <p className="text-4xl font-bold">{allUserCount}</p>
                 </div>
                 <FaUsers className="text-yellow-400 text-5xl" />
               </div>
@@ -137,7 +144,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between p-5 shadow-md rounded-md">
                 <div>
                   <p>Subscribed Users</p>
-                  <h3 className="text-4xl font-bold">{subscribeCount}</h3>
+                  <p className="text-4xl font-bold">{subscribeCount}</p>
                 </div>
                 <FaUsers className="text-green-400 text-5xl" />
               </div>
@@ -154,9 +161,9 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between p-5 shadow-md rounded-md">
                 <div>
                   <p>Subscription Count</p>
-                  <h3 className="text-4xl font-bold">
-                    {allPayments?.count || 0}
-                  </h3>
+                  <p className="text-4xl font-bold">
+                    {monthlySalesRecod?.reduce((a, b) => a + b, 0)}
+                  </p>
                 </div>
                 <FcSalesPerformance className="text-5xl" />
               </div>
@@ -164,9 +171,7 @@ const AdminDashboard = () => {
               <div className="flex items-center justify-between p-5 shadow-md rounded-md">
                 <div>
                   <p>Total Revenue</p>
-                  <h3 className="text-4xl font-bold">
-                    {(allPayments?.count || 0) * 999}
-                  </h3>
+                  <p className="text-4xl font-bold">₹ {totalRevenue || 0}</p>
                 </div>
                 <GiMoneyStack className="text-5xl" />
               </div>
@@ -177,7 +182,7 @@ const AdminDashboard = () => {
         {/* ================= COURSE TABLE ================= */}
         <div className="mx-[10%] w-[80%] flex flex-col gap-5 mb-10">
           <div className="flex justify-between">
-            <h1 className="text-3xl font-semibold">Course Overview</h1>
+            <h2 className="text-3xl font-semibold">Course Overview</h2>
             <button
               onClick={() => navigate("/course/create")}
               className="bg-yellow-500 px-4 py-2 rounded font-semibold"

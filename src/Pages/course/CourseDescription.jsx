@@ -16,15 +16,12 @@ const CourseDescription = () => {
   // ✅ COURSE-WISE ACCESS CHECK
   const hasAccess =
     role === "admin" ||
-    user?.subscribedCourses?.some(
-      (id) => id.toString() === courseId
-    );
+    user?.subscribedCourses?.some((id) => id.toString() === courseId);
 
   return (
     <HomeLayout>
       <div className="min-h-[90vh] pt-12 px-10 flex items-center justify-center text-white">
         <div className="grid grid-cols-2 gap-10 py-10 px-10 rounded-2xl bg-gradient-to-br from-[#1A2238] to-[#0F172A] shadow-2xl border border-gray-700 max-w-6xl w-full">
-          
           {/* ================= LEFT CARD ================= */}
           <div className="space-y-6 bg-[#111827] p-6 rounded-xl shadow-lg border border-gray-700">
             <img
@@ -84,6 +81,10 @@ const CourseDescription = () => {
             <p className="text-gray-300 leading-relaxed">
               {state?.description}
             </p>
+
+            {/* <h2 className="text-2xl font-bold text-yellow-400">
+              {state?.price === 0 ? "Free Course" : `Price: ₹ ${state.price}`}
+            </h2> */}
 
             {/* 🔒 ACCESS INFO */}
             {!hasAccess && role !== "admin" && (

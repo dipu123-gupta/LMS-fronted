@@ -22,61 +22,52 @@ import ChangePassword from "./Pages/User/ChangePassword.jsx";
 import ForgotPassword from "./Pages/Auth/ForgotPassword.jsx";
 import ResetPassword from "./Pages/Auth/ResetPassword.jsx";
 import AdminDashboard from "./Pages/Dasbord/AdminDashboard.jsx";
-// import Footer from "./Components/Footer.jsx";
-// import Footer from "daisyui/components/footer";
-import { useDispatch } from "react-redux";
+
+import { useDispatch  } from "react-redux";
 import { useEffect } from "react";
 import { getUserData } from "./Redux/Slices/AuthSlice";
 
 function App() {
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getUserData());
-  }, []);
+  }, [dispatch]);
 
   return (
-    // <Footer/>
-    <>
-      {/* <AddLecture /> */}
-      {/* <DisplayLecture /> */}
-      {/* <FailCheckout/> */}
-      {/* <CheckOutSuccess/> */}
-      <Routes>
-        {/* 🌐 Public Routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/course/description" element={<CourseDescription />} />
-        <Route path="/denied" element={<Denied />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <Routes>
+      {/* 🌐 Public Routes */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/courses" element={<Courses />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/course/description" element={<CourseDescription />} />
+      <Route path="/denied" element={<Denied />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* 🔐 Admin Protected Routes */}
-        <Route element={<RequireAuth allowedRole={["admin"]} />}>
-          <Route path="/course/create" element={<CreateCourse />} />
-          <Route path="/course/addlecture" element={<AddLecture />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        </Route>
+      {/* 🔐 Admin Protected Routes */}
+      <Route element={<RequireAuth allowedRole={["admin"]} />}>
+        <Route path="/course/create" element={<CreateCourse />} />
+        <Route path="/course/addlecture" element={<AddLecture />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      </Route>
 
-        {/* 🔐 User + Admin Protected Routes */}
-        <Route element={<RequireAuth allowedRole={["admin", "user"]} />}>
-          <Route path="/user/profile" element={<Profile />} />
-          <Route path="/user/editProfile" element={<EditProfile />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/checkout/success" element={<CheckOutSuccess />} />
-          <Route path="/checkout/fail" element={<FailCheckout />} />
-          <Route path="/course/display-lectures" element={<DisplayLecture />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
-        </Route>
+      {/* 🔐 User + Admin Protected Routes */}
+      <Route element={<RequireAuth allowedRole={["admin", "user"]} />}>
+        <Route path="/user/profile" element={<Profile />} />
+        <Route path="/user/editProfile" element={<EditProfile />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout/success" element={<CheckOutSuccess />} />
+        <Route path="/checkout/fail" element={<FailCheckout />} />
+        <Route path="/course/display-lectures" element={<DisplayLecture />} />
+        <Route path="/changePassword" element={<ChangePassword />} />
+      </Route>
 
-        {/* ❌ 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+      {/* ❌ 404 */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

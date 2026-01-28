@@ -7,7 +7,10 @@ import CourseCard from "../../Components/CourseCard.jsx";
 const Courses = () => {
   const dispatch = useDispatch();
 
-  const courseData = useSelector((state) => state.Courses.courseData);
+  // ✅ SAFE SELECTOR
+  const courseData = useSelector(
+    (state) => state.Courses?.courseData || []
+  );
 
   useEffect(() => {
     dispatch(getAllCourses());
@@ -22,7 +25,7 @@ const Courses = () => {
         </h1>
 
         <div className="mb-10 flex flex-wrap gap-14">
-          {courseData && courseData.length > 0 ? (
+          {courseData.length > 0 ? (
             courseData.map((course) => (
               <CourseCard key={course._id} data={course} />
             ))

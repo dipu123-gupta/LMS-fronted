@@ -76,20 +76,23 @@ export const updateProfile = createAsyncThunk(
       error: "Failed to update profile",
     });
     return (await res).data;
-  }
+  },
 );
 
 /* ======================
    LOAD USER (REFRESH FIX)
 ====================== */
-export const getUserData = createAsyncThunk("/user/details", async () => {
-  try {
-    const res = await axiosInstance.get("/user/profile");
-    return res.data;
-  } catch (error) {
-    throw error;
-  }
-});
+export const getUserData = createAsyncThunk(
+  "/user/details",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/user/profile");
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  },
+);
 
 /* ======================
    CHANGE PASSWORD
@@ -103,7 +106,7 @@ export const changePassword = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -115,14 +118,11 @@ const authSlice = createSlice({
       /* LOGIN */
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false; // ✅ FIX
-
         if (!action.payload?.user) return;
         const user = action.payload.user;
-
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
-
         state.isLoggedIn = true;
         state.data = user;
         state.role = user.role;
@@ -140,22 +140,20 @@ const authSlice = createSlice({
       /* LOAD USER (REFRESH) */
       .addCase(getUserData.fulfilled, (state, action) => {
         state.loading = false; // ✅ FIX
-
         if (!action.payload?.user) return;
         const user = action.payload.user;
-
         localStorage.setItem("data", JSON.stringify(user));
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("role", user.role);
-
         state.isLoggedIn = true;
         state.data = user;
         state.role = user.role;
       })
-
       .addCase(getUserData.rejected, (state) => {
-        state.loading = false; // ✅ VERY IMPORTANT
+        state.loading = false; // 🔥 STOP LOOP
         state.isLoggedIn = false;
+        state.role = "";
+        state.data = {};
       })
 
       /* CHANGE PASSWORD */
