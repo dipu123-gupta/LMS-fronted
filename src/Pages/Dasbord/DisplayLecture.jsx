@@ -44,7 +44,7 @@ const DisplayLecture = () => {
           Course Name: {state?.title}
         </div>
 
-        {/* ✅ FIXED CONDITIONAL RENDERING */}
+        {/*  FIXED CONDITIONAL RENDERING */}
         {lectures.length > 0 ? (
           <div className="flex justify-center gap-10 w-full">
 

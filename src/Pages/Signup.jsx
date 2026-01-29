@@ -74,13 +74,13 @@ const Signup = () => {
       return;
     }
 
-    //! ✅ EMAIL VALIDATION
+    //!  EMAIL VALIDATION
     if (!isEmail(signupData.email)) {
       toast.error("Please enter a valid email address");
       return;
     }
 
-    //! ✅ PASSWORD VALIDATION
+    //!  PASSWORD VALIDATION
     if (!isPassword(signupData.password)) {
       toast.error(
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
@@ -135,7 +135,7 @@ const Signup = () => {
             id="image-uploads"
             accept=".jpg, .jpeg, .png, .svg"
             name="image-uploads"
-            onChange={getImage} // ✅ uncommented
+            onChange={getImage} 
           />
 
           <div className="flex flex-col gap-1">

@@ -21,7 +21,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  // 🔑 courseId from CourseDescription
+  // courseId from CourseDescription
   const courseId = state?.courseId;
 
   // Razorpay key
@@ -30,7 +30,7 @@ const Checkout = () => {
   // Logged-in user
   const user = useSelector((state) => state?.auth?.data);
 
-  // ✅ ORDER DATA (IMPORTANT)
+  // ORDER DATA (IMPORTANT)
   const [orderData, setOrderData] = useState(null);
 
   /* =========================

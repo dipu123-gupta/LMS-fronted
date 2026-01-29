@@ -7,13 +7,13 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// 🔥 RESPONSE INTERCEPTOR
+// RESPONSE INTERCEPTOR
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
 
-    // 🚫 AUTO REDIRECT REMOVED (LOOP FIX)
+    //  AUTO REDIRECT REMOVED (LOOP FIX)
     // if (status === 401) {
     //   window.location.href = "/login";
     // }

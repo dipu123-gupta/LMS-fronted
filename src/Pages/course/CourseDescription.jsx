@@ -10,10 +10,10 @@ const CourseDescription = () => {
   // auth state
   const { role, data: user } = useSelector((state) => state.auth);
 
-  // 🔑 current course id
+  // current course id
   const courseId = state?._id;
 
-  // ✅ COURSE-WISE ACCESS CHECK
+  // COURSE-WISE ACCESS CHECK
   const hasAccess =
     role === "admin" ||
     user?.subscribedCourses?.some((id) => id.toString() === courseId);
@@ -86,7 +86,7 @@ const CourseDescription = () => {
               {state?.price === 0 ? "Free Course" : `Price: ₹ ${state.price}`}
             </h2> */}
 
-            {/* 🔒 ACCESS INFO */}
+            {/*  ACCESS INFO */}
             {!hasAccess && role !== "admin" && (
               <p className="text-red-400 font-semibold mt-4">
                 ⚠ You are not subscribed to this course

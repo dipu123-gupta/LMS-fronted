@@ -30,7 +30,7 @@ export const getAllCourses = createAsyncThunk(
 );
 
 /* =====================
-   CREATE NEW COURSE  ✅
+   CREATE NEW COURSE  
 ===================== */
 export const createNewCourse = createAsyncThunk(
   "courses/create",

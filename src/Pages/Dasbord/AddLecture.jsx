@@ -60,7 +60,7 @@ const AddLecture = () => {
     }
   }, [courseDetails, navigate]);
 
-  // 🔥 prevent memory leak
+  // prevent memory leak
   useEffect(() => {
     return () => {
       if (userInput.vidioSrc) {

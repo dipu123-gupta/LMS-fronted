@@ -13,7 +13,7 @@ const store = configureStore({
     razorpay: razorpaySlice,
     lecture: lectureSlice,
     password: passwordReducer,
-    stat: statReducer, // ✅ KEY NAME = stat
+    stat: statReducer, 
   },
   devTools: true,
 });

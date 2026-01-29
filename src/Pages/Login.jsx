@@ -29,7 +29,7 @@ const Login = () => {
 
     const response = await dispatch(login(loginData));
 
-    // ✅ FIXED HERE
+    //  FIXED HERE
     if (response?.payload?.success) {
       navigate("/");
       setLoginData({ email: "", password: "" });

@@ -58,7 +58,7 @@ const Contact = () => {
 
     try {
       setLoading(true);
-      const res = await axiosInstance.post("/contact", formData);
+      const res = await axiosInstance.post("/user", formData);
 
       if (res?.data?.success) {
         toast.success("Message sent successfully ✨");

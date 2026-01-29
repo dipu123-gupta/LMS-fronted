@@ -117,7 +117,7 @@ const authSlice = createSlice({
     builder
       /* LOGIN */
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false; // ✅ FIX
+        state.loading = false; 
         if (!action.payload?.user) return;
         const user = action.payload.user;
         localStorage.setItem("data", JSON.stringify(user));
@@ -130,7 +130,7 @@ const authSlice = createSlice({
 
       /* LOGOUT */
       .addCase(logout.fulfilled, (state) => {
-        state.loading = false; // ✅ FIX
+        state.loading = false; 
         localStorage.clear();
         state.isLoggedIn = false;
         state.role = "";
@@ -139,7 +139,7 @@ const authSlice = createSlice({
 
       /* LOAD USER (REFRESH) */
       .addCase(getUserData.fulfilled, (state, action) => {
-        state.loading = false; // ✅ FIX
+        state.loading = false; 
         if (!action.payload?.user) return;
         const user = action.payload.user;
         localStorage.setItem("data", JSON.stringify(user));
@@ -150,7 +150,7 @@ const authSlice = createSlice({
         state.role = user.role;
       })
       .addCase(getUserData.rejected, (state) => {
-        state.loading = false; // 🔥 STOP LOOP
+        state.loading = false; 
         state.isLoggedIn = false;
         state.role = "";
         state.data = {};

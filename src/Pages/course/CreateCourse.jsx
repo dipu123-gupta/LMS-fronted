@@ -54,7 +54,7 @@ const CreateCourse = () => {
   const onFormSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ FIX: price === "" instead of !price (FREE COURSE SUPPORT)
+    //FIX: price === "" instead of !price (FREE COURSE SUPPORT)
     if (
       !userInput.title ||
       !userInput.category ||
@@ -75,7 +75,7 @@ const CreateCourse = () => {
     formData.append("thumbnail", userInput.thumbnail);
     formData.append("price",(userInput.price));
 
-    // ✅ SAFE DISCOUNT
+    // SAFE DISCOUNT
     formData.append(
       "discount",
       userInput.discount === "" ? 0 :(userInput.discount)

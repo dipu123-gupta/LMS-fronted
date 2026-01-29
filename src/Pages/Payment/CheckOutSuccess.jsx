@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../Redux/Slices/AuthSlice.js";
 
 const CheckOutSuccess = () => {
-  const dispatch = useDispatch(); // ✅ FIX
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 🔄 refresh user after payment
+    // refresh user after payment
     dispatch(getUserData());
 
-    // ⏳ auto redirect after 3 sec
+    //  auto redirect after 3 sec
     const timer = setTimeout(() => {
       navigate("/");
     }, 3000);

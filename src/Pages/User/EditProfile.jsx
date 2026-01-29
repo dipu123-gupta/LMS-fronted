@@ -21,7 +21,7 @@ const EditProfile = () => {
     avatar: "",
   });
 
-  /* ✅ LOAD EXISTING USER DATA */
+  /*  LOAD EXISTING USER DATA */
   useEffect(() => {
     if (userData) {
       setData((prev) => ({
@@ -87,10 +87,7 @@ const EditProfile = () => {
       <div className="flex items-center justify-center min-h-[90vh] bg-gradient-to-br from-[#0F172A] to-[#020617]">
         <form
           onSubmit={onFormSubmit}
-          className="w-[22rem] bg-white/5 backdrop-blur-xl
-                     border border-white/10 rounded-2xl
-                     p-6 text-white shadow-[0_0_30px_rgba(0,0,0,0.7)]
-                     flex flex-col gap-5"
+          className="w-[22rem] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-white shadow-[0_0_30px_rgba(0,0,0,0.7)] flex flex-col gap-5"
         >
           <h1 className="text-center text-2xl font-bold text-yellow-400">
             Edit Profile
@@ -102,9 +99,7 @@ const EditProfile = () => {
               <img
                 src={data.previewImage}
                 alt="preview"
-                className="w-28 h-28 object-cover rounded-full mx-auto
-                           border-4 border-yellow-500 shadow-lg
-                           hover:scale-105 transition"
+                className="w-28 h-28 object-cover rounded-full mx-auto border-4 border-yellow-500 shadow-lg hover:scale-105 transition"
               />
             ) : (
               <BsPersonCircle className="w-28 h-28 mx-auto text-gray-400" />
@@ -136,9 +131,7 @@ const EditProfile = () => {
           {/* BUTTON */}
           <button
             type="submit"
-            className="w-full bg-yellow-600 hover:bg-yellow-500
-                       transition-all duration-300 rounded-md py-2
-                       font-semibold text-black"
+            className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all duration-300 rounded-md py-2 font-semibold text-black"
           >
             Update Profile
           </button>
@@ -146,8 +139,7 @@ const EditProfile = () => {
           {/* BACK */}
           <Link
             to="/user/profile"
-            className="flex items-center justify-center gap-2
-                       text-sm text-yellow-400 hover:underline"
+            className="flex items-center justify-center gap-2 text-sm text-yellow-400 hover:underline"
           >
             <AiOutlineArrowLeft />
             Go back to profile

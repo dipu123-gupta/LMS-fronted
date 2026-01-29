@@ -8,8 +8,8 @@ const initialState = {
   isPaymentVerified: false,
   allPayments: {},
   monthlySalesRecod: [],
-  monthlyRevenue: [], // ✅ ADD
-  totalRevenue: 0, // ✅ ADD
+  monthlyRevenue: [], 
+  totalRevenue: 0, 
 };
 
 /* ======================

@@ -7,7 +7,7 @@ import CourseCard from "../../Components/CourseCard.jsx";
 const Courses = () => {
   const dispatch = useDispatch();
 
-  // ✅ SAFE SELECTOR
+  // SAFE SELECTOR
   const courseData = useSelector(
     (state) => state.Courses?.courseData || []
   );

@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 const RequireAuth = ({ allowedRole }) => {
   const { isLoggedIn, role, loading } = useSelector((state) => state.auth);
 
-  // 🔥 WAIT until auth check finishes
+  //  WAIT until auth check finishes
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-xl">
@@ -13,12 +13,12 @@ const RequireAuth = ({ allowedRole }) => {
     );
   }
 
-  // 🔒 Not logged in
+  //  Not logged in
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
 
-  // 🚫 Role not allowed
+  //  Role not allowed
   if (!allowedRole.includes(role)) {
     return <Navigate to="/denied" replace />;
   }

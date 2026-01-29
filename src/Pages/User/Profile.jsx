@@ -1,26 +1,26 @@
-// 🔹 Layout wrapper (Navbar + Footer)
+//  Layout wrapper (Navbar + Footer)
 import HomeLayout from "../../Layouts/HomeLayout.jsx";
 
-// 🔹 Redux hooks
+//  Redux hooks
 import { useDispatch, useSelector } from "react-redux";
 
-// 🔹 Router helpers
+// Router helpers
 import { Link, useNavigate } from "react-router-dom";
 
-// 🔹 Razorpay subscription cancel action
+//  Razorpay subscription cancel action
 import { cancelCourseBundle } from "../../Redux/Slices/RazorpaySlice.js";
 
-// 🔹 Fetch updated user data after cancellation
+//  Fetch updated user data after cancellation
 import { getUserData } from "../../Redux/Slices/AuthSlice.js";
 
-// 🔹 Toast notifications
+//  Toast notifications
 import toast from "react-hot-toast";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 👤 Logged-in user data from Redux store
+  //  Logged-in user data from Redux store
   const userData = useSelector((state) => state?.auth?.data);
 
   /* =====================================================
@@ -34,20 +34,20 @@ const Profile = () => {
 
     const res = await dispatch(cancelCourseBundle());
 
-    // 🔥 CASE–1: Backend success
+    //  CASE–1: Backend success
     if (res?.payload?.success) {
       toast.success("Subscription cancelled", { id: "cancel" });
 
       // ⏱ webhook / DB sync delay handle
       setTimeout(async () => {
-        await dispatch(getUserData()); // 🔄 refresh profile
+        await dispatch(getUserData()); //  refresh profile
         navigate("/"); // redirect after refresh
       }, 2000);
 
       return;
     }
 
-    // 🔥 CASE–2: Already cancelled / Razorpay error
+    //  CASE–2: Already cancelled / Razorpay error
     if (res?.error) {
       console.log("Cancel error:", res.error);
 
@@ -61,7 +61,7 @@ const Profile = () => {
       return;
     }
 
-    // 🔥 CASE–3: Real failure
+    //  CASE–3: Real failure
     toast.error("Cancellation failed", { id: "cancel" });
   };
 
@@ -141,10 +141,6 @@ const Profile = () => {
               onClick={handleCancelation}
               className="w-full bg-red-600 hover:bg-red-500 transition-all duration-300 rounded-md py-2 font-semibold shadow-md"
             >
-              {/* // <button
-            //   disabled={userData?.subscription?.status !== "active"}
-            //   onClick={handleCancelation}
-            // > */}
               Cancel Subscription
             </button>
           )}
